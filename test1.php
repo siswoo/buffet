@@ -53,7 +53,7 @@ function agregarFila(){
 	$('#hidden_value1').val(contador2);
 }
 
-function eliminarFila(){
+function eliminarFila(fila){
 	//
 }
 

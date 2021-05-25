@@ -1,5 +1,10 @@
 <?php
 session_start();
+if(@$_SESSION["id"]=='' or $_SESSION["id"]==null or $_SESSION["id"]==0){ ?>
+  <script type="text/javascript">
+    window.location.href = "index.php";
+  </script>
+  <?php exit; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +23,11 @@ session_start();
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
   <link rel="stylesheet" href="plugins/dropzone1/dist/dropzone.css">
 </head>
+
+<style type="text/css">
+
+</style>
+
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
@@ -67,7 +77,9 @@ session_start();
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-12" data-toggle="modal" data-target="#exampleModal1">Hola</div>
+          <div class="col-12" data-toggle="modal" data-target="#exampleModal1">
+              
+          </div>
         </div>
       </div>
     </div>
@@ -197,55 +209,50 @@ include('footer.php');
     });
   }
 
-  $("#formulario_consultar_registro2").on("submit", function(e){
+  $("#modal_formulario_modificar").on("submit", function(e){
     e.preventDefault();
-    var id            = $('#edit_id1').val();
-    var nombre        = $('#edit_nombre1').val();
-    var precio        = $('#edit_precio1').val();
-    var descripcion   = $('#edit_descripcion1').val();
-    var categoria     = $('#edit_categoria1').val();
-    var estatus       = $('#edit_estatus1').val();
+    var f = $(this);
+    var fd = new FormData();
+    var files = $('#edit_imagen1')[0].files[0];
+    fd.append('imagen',files);
+    fd.append('id',$('#edit_id1').val());
+    fd.append('nombre',$('#edit_nombre1').val());
+    fd.append('precio',$('#edit_precio1').val());
+    fd.append('dia',$('#edit_dia1').val());
+    fd.append('condicion',"editar");
 
     $.ajax({
-          url: '../script/crud_productos1.php',
-          type: 'POST',
-          dataType: "JSON",
-          data: {
-        "id": id,
-        "nombre": nombre,
-        "precio": precio,
-        "descripcion": descripcion,
-        "categoria": categoria,
-        "estatus": estatus,
-        "condicion": 'editar',
+      url: '../script/crud_semanal.php',
+      type: 'POST',
+      dataType: "JSON",
+      data: fd,
+      contentType: false,
+      processData: false,
+
+      beforeSend: function (){
+        $('#submit_editar1').attr('disabled','true');
       },
 
-          beforeSend: function (){
-              $('#submit_editar1').attr('disabled','true');
-          },
+      success: function(response){
+        console.log(response);
+        $('#submit_editar1').removeAttr('disabled','false');
+        Swal.fire({
+          title: 'Modificado',
+          text: "Proceso Exitoso",
+          icon: 'success',
+          position: 'center',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      },
 
-          success: function(response){
-            console.log(response);
-            $('#submit_editar1').removeAttr('disabled','false');
-            Swal.fire({
-              title: 'Modificado',
-              text: "Proceso Exitoso",
-              icon: 'success',
-              position: 'center',
-              showConfirmButton: false,
-              timer: 3000
-            });
-            setTimeout(function() {
-              window.location.href = "inventario1.php";
-            },2000);
-          },
+      error: function(response){
+        $('#submit_editar1').removeAttr('disabled','false');
+        console.log(response['responseText']);
+      },
 
-          error: function(response){
-            $('#submit_editar1').removeAttr('disabled','false');
-            console.log(response['responseText']);
-          }
-      });
     });
+  });
 
   function eliminar1(id){
     Swal.fire({

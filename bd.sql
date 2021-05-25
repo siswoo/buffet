@@ -17,3 +17,17 @@ CREATE TABLE usuarios (
 
 INSERT INTO usuarios (nombre,apellido,documento_tipo,documento_numero,usuario,clave,fecha_creacion) VALUES 
 ('Juan','Maldonado','PEP','955948708101993','admin','e1f2e2d4f6598c43c2a45d2bd3acb7be','2021-05-20');
+
+
+DROP TABLE IF EXISTS semanal;
+CREATE TABLE semanal (
+	id INT AUTO_INCREMENT,
+	nombre VARCHAR(250) NOT NULL,
+	precio FLOAT(11,2) NOT NULL,
+	estatus VARCHAR(250) NOT NULL,
+	fecha_creacion DATE NOT NULL,
+	PRIMARY KEY (id)
+); ALTER TABLE semanal CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+INSERT INTO semanal (nombre,precio,estatus,fecha_creacion) VALUES 
+('prueba1',2000.50,'Proceso','2021-05-24');
