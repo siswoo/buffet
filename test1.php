@@ -54,7 +54,7 @@ function agregarFila(){
 }
 
 function eliminarFila(fila){
-	//
+	$('#')
 }
 
 </script>
