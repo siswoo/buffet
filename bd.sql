@@ -35,6 +35,7 @@ INSERT INTO semanal (nombre,precio,estatus,fecha_creacion) VALUES
 DROP TABLE IF EXISTS efectivos;
 CREATE TABLE efectivos (
 	id INT AUTO_INCREMENT,
+	tipo VARCHAR(250) NOT NULL,
 	concepto1 VARCHAR(250) NOT NULL,
 	cantidad1 INT NOT NULL,
 	valor1 INT NOT NULL,

@@ -1,6 +1,7 @@
 <?php
 //session_start();
 include("conexion.php");
+include("conexion2.php");
 $fecha_creacion = date("Y-m-d");
 //$responsable = $_SESSION["id"];
 $condicion = $_POST["condicion"];
@@ -8,7 +9,14 @@ $condicion = $_POST["condicion"];
 if($condicion=='registrar1'){
 	$condicion2 = $_POST["condicion2"];
 	$modal_condicion1 = $_POST["modal_condicion1"];
-	$precio = $_POST["precio"];
+	if($modal_condicion1=='Desayuno'){
+		$precio = 6000;
+	}else if($modal_condicion1=='Almuerzo'){
+		$precio = 9000;
+	}else{
+		$precio = 0;
+	}
+	$tipo = $modal_condicion1;
 	$concepto1 = $_POST["concepto1"];
 	$cantidad1 = $_POST["cantidad1"];
 	$valor1 = str_replace(",","",$_POST["valor1"]);
@@ -54,7 +62,7 @@ if($condicion=='registrar1'){
 	$total_todo = $precio+$total1+$total2+$total3+$total4+$total5;
 
 	if($condicion2=='efectivo'){
-		$sql1 = "INSERT INTO efectivos (concepto1,cantidad1,valor1,concepto2,cantidad2,valor2,concepto3,cantidad3,valor3,concepto4,cantidad4,valor4,concepto5,cantidad5,valor5,total1,total2,total3,total4,total5,precio,total_todo,fecha_creacion) VALUES ('$concepto1','$cantidad1','$valor1','$concepto2','$cantidad2','$valor2','$concepto3','$cantidad3','$valor3','$concepto4','$cantidad4','$valor4','$concepto5','$cantidad5','$valor5','$total1','$total2','$total3','$total4','$total5','$precio','$total_todo','$fecha_creacion')";
+		$sql1 = "INSERT INTO efectivos (tipo,concepto1,cantidad1,valor1,concepto2,cantidad2,valor2,concepto3,cantidad3,valor3,concepto4,cantidad4,valor4,concepto5,cantidad5,valor5,total1,total2,total3,total4,total5,precio,total_todo,fecha_creacion) VALUES ('$tipo','$concepto1','$cantidad1','$valor1','$concepto2','$cantidad2','$valor2','$concepto3','$cantidad3','$valor3','$concepto4','$cantidad4','$valor4','$concepto5','$cantidad5','$valor5','$total1','$total2','$total3','$total4','$total5','$precio','$total_todo','$fecha_creacion')";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		if (!$proceso1) {
 			$datos = [
@@ -77,14 +85,18 @@ if($condicion=='registrar1'){
 
 			$pdf->SetFont('Helvetica','',12);
 			$pdf->Cell(25,5,utf8_decode("Buffet Camaleón"),0,1,'C');
-			$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
-			$pdf->Cell(25,5,$modal_condicion1,0,1,'C');
-			$pdf->SetFont('Helvetica','',10);
-			$pdf->Cell(25,5,"Precio: ".$precio,0,1,'C');
-			$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
-			if($valor1>=1 or $valor2>=1 or $valor3>=1 or $valor4>=1 or $valor5>=1){
-				$pdf->Cell(25,5,"Adicionales Agregados",0,1,'C');
+
+			if($modal_condicion1!='Otros'){
+				$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
+				$pdf->Cell(25,5,$modal_condicion1,0,1,'C');
+				$pdf->SetFont('Helvetica','',10);
+				$pdf->Cell(25,5,"Precio: ".$precio,0,1,'C');
+				$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
+				if($valor1>=1 or $valor2>=1 or $valor3>=1 or $valor4>=1 or $valor5>=1){
+					$pdf->Cell(25,5,"Adicionales Agregados",0,1,'C');
+				}
 			}
+
 			$pdf->SetFont('Helvetica','',8);
 			if($valor1>=1){
 				$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
@@ -141,3 +153,48 @@ if($condicion=='registrar1'){
 		}
 	}
 }
+
+if($condicion=='busquedaGlobal1'){
+	$value = $_POST["value"];
+	$documento1 = $_POST["documento1"];
+	$quien = $_POST["quien1"];
+	$html1 = "";
+
+	if($quien=='Modelo'){
+		$sql1 = "SELECT * FROM modelos WHERE documento_numero LIKE '%".$documento1."%' and estatus = 'Activa'";
+		$proceso1 = mysqli_query($conexion2,$sql1);
+	}else if($quien=='Nomina'){
+		$sql1 = "SELECT * FROM nomina WHERE documento_numero LIKE '%".$documento1."%' and estatus = 'Aceptado'";
+		$proceso1 = mysqli_query($conexion2,$sql1);
+	}
+	$contador1 = mysqli_num_rows($proceso1);
+	if($contador1 >= 1){
+		while($row = mysqli_fetch_array($proceso1)) {
+			if($quien=='Modelo'){
+				$busqueda_id = $row["id"];
+				$nombre = $row['nombre1']." ".$row['nombre2']." ".$row['apellido1']." ".$row['apellido2'];
+				$documento_numero = $row['documento_numero'];
+				$documento_tipo = $row['documento_tipo'];
+			}else if($quien=="Nomina"){
+				$busqueda_id = $row["id"];
+				$nombre = $row['nombre']." ".$row['apellido'];
+				$documento_numero = $row['documento_numero'];
+				$documento_tipo = $row['documento_tipo'];
+			}
+			$html1 .= '
+				<option value="'.$documento_numero.'">'.$nombre.'</option>
+			';
+		}
+		$datos = [
+			/*"sql1" => $sql1,*/
+			"html" => $html1,
+			"estatus" => "ok",
+		];
+		echo json_encode($datos);
+		exit;
+	}
+}
+
+
+
+

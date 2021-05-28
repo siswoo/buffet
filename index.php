@@ -33,7 +33,7 @@
 			<button class="btn btn-primary" style="font-size: 40px;" data-toggle="modal" data-target="#exampleModal1" onclick="almuerzos1();">ALMUERZOS</button>
 		</div>
 		<div class="col-4 text-center mt-3">
-			<button class="btn btn-info" style="font-size: 40px;" data-toggle="modal" data-target="#exampleModal1" onclick="almuerzos1();">OTROS</button>
+			<button class="btn btn-info" style="font-size: 40px;" data-toggle="modal" data-target="#exampleModal1" onclick="otros1();">OTROS</button>
 		</div>
 		<div class="col-12 text-center mt-3">
 			<button class="btn btn-danger" style="font-size: 40px;" onclick="printJS('buffet/ticket.pdf')">Reimprimir</button>
@@ -44,62 +44,87 @@
 </body>
 </html>
 
-<!-- Modal DESAYUNOS -->
+<!-- Modal GENERAL -->
 	<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Asignar <span id="modal_titulo1"></span></h5>
-					<input type="hidden" id="modal_condicion1" name="modal_condicion1" value="0">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<form action="#" id="formulario1" method="POST">
-					<div class="row">
-						<div id="div_adicionales" class="col-12 text-center" style="font-weight:bold; font-size: 20px;">ADICIONALES</div>
-						<div id="div_adicionales" class="col-12 text-center">
-							<!--<button class="btn btn-primary" id="button">Adicionales</button>-->
-							<div class="row">
-								<div class="col-6 text-center" style="font-weight: bold;">Concepto</div>
-								<div class="col-2 text-center" style="font-weight: bold;">Cant.</div>
-								<div class="col-4 text-center" style="font-weight: bold;">Valor</div>
-								<?php
-								for ($i=1;$i<=5;$i++){ ?>
-									<div class="col-6 mt-2">
-										<input type="text" id="concepto_<?php echo $i; ?>" name="concepto_<?php echo $i; ?>" class="form-control" onkeyup="concepto1(this.id,value,<?php echo $i; ?>);">
+						<input type="hidden" id="modal_condicion1" name="modal_condicion1" value="0">
+						<div class="row">
+							<div class="col-12 text-center" style="font-weight:bold; font-size: 20px;">ADICIONALES</div>
+							<div id="div_adicionales" class="col-12 text-center">
+								<div class="row">
+									<div class="col-6 text-center" style="font-weight: bold;">Concepto</div>
+									<div class="col-2 text-center" style="font-weight: bold;">Cant.</div>
+									<div class="col-4 text-center" style="font-weight: bold;">Valor</div>
+									<?php
+									for ($i=1;$i<=5;$i++){ ?>
+										<div class="col-6 mt-2">
+											<input type="text" id="concepto_<?php echo $i; ?>" name="concepto_<?php echo $i; ?>" class="form-control" onkeyup="concepto1(this.id,value,<?php echo $i; ?>);">
+										</div>
+										<div class="col-2 mt-2">
+											<input type="text" id="cantidad_<?php echo $i; ?>" name="cantidad_<?php echo $i; ?>" class="form-control cantidad" max="10" min="0">
+										</div>
+										<div class="col-4 mt-2">
+											<input type="text" id="valor_<?php echo $i; ?>" name="valor_<?php echo $i; ?>" class="form-control number" min="500">
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+
+							<div class="col-12" style="/*display: none;*/">
+								<div class="row">
+								  <div class="col-6 text-center mt-3">
+										<button type="button" class="btn btn-success" id="efectivo" value="0" onclick="efectivo1(value);">Efectivo</button>
 									</div>
-									<div class="col-2 mt-2">
-										<input type="text" id="cantidad_<?php echo $i; ?>" name="cantidad_<?php echo $i; ?>" class="form-control cantidad" max="10" min="0">
+									<div class="col-6 text-center mt-3">
+										<button type="button" class="btn btn-primary" id="app" value="0" onclick="app1(value);">APP</button>
 									</div>
-									<div class="col-4 mt-2">
-										<input type="text" id="valor_<?php echo $i; ?>" name="valor_<?php echo $i; ?>" class="form-control number" min="500">
-									</div>
-								<?php } ?>
+								</div>
 							</div>
 						</div>
+					</form>
 
-						<div class="col-12" style="/*display: none;*/">
-							<div class="row">
-							  <div class="col-6 text-center mt-3">
-									<button type="button" class="btn btn-success" id="efectivo" value="0" onclick="efectivo1(value);">Efectivo</button>
-								</div>
-								<div class="col-6 text-center mt-3">
-									<button type="button" class="btn btn-primary" id="app" value="0" onclick="app1(value);">APP</button>
-								</div>
-							</div>
+					<!-- APARTADO DE APP -->
+					<div class="row mt-3" id="div_app1" style="display:none;">
+						<div class="col-12 form-group form-check">
+							<label for="quien">Elegir a Quien</label>
+							<select name="quien1" id="quien1" class="form-control" onchange="quien1(value);" required>
+								<option value="">Seleccione</option>
+								<option value="Modelo">Modelo</option>
+								<option value="Nomina">Nomina</option>
+							</select>
 						</div>
 					</div>
-					</form>
+
+					<div class="row mt-3" id="div_quien1" style="display:none;">
+						<div class="col-12">
+							<label for="documento1">Documento de Identidad</label>
+							<input type="search" id="documento1" name="documento1" list="busquedaGlobal1" onkeyup="buscarGlobal1(value);" class="form-control" autocomplete="off" required>
+				    	<datalist id="busquedaGlobal1">
+				    		<option></option>
+				    	</datalist>
+						</div>
+					</div>
+					<!-- *************** -->
+
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-			    </div>
+			  </div>
 		    </form>
 	  	</div>
+	  </div>
 	</div>
-<!-- FIN DESAYUNOS -->
+<!-- FIN GENERAL -->
 
 <script src="js/jquery-3.5.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -115,7 +140,7 @@
 
 	function efectivo1(value){
 		var condicion2 = "efectivo";
-		var precio = 6000;
+		var precio = $('#hidden_precio1').val();
 		var modal_condicion1 = $('#modal_condicion1').val();
 		var concepto1 = $('#concepto_1').val();
 		var cantidad1 = $('#cantidad_1').val();
@@ -270,6 +295,11 @@
 		$('#modal_condicion1').val("Almuerzo");
 	}
 
+	function otros1(){
+		$('#modal_titulo1').html("Otros");
+		$('#modal_condicion1').val("Otros");
+	}
+
 	$('.cantidad').on({
 		"focus": function (event) {
         $(event.target).select();
@@ -325,6 +355,48 @@
         });
     }
 	});
+
+	function app1(){
+		$('#div_app1').show("slow");
+	}
+
+	function quien1(value){
+		if(value!=""){
+			$('#div_quien1').show("slow");
+		}else{
+			$('#div_quien1').hide("slow");
+		}
+	}
+
+	function buscarGlobal1(value){
+		var cantidad = value.length;
+		var documento1 = $('#documento1').val();
+		var quien1 = $('#quien1').val();
+		if(cantidad<=3){
+			$('#busquedaGlobal1').html('ok');
+			return false;
+		}
+		$.ajax({
+			type: 'POST',
+			url: 'script/crud_general.php',
+			dataType: "JSON",
+			data: {
+				"value": value,
+				"documento1": documento1,
+				"quien1": quien1,
+				"condicion": "busquedaGlobal1",
+			},
+
+			success: function(respuesta) {
+				console.log(respuesta);
+				$('#busquedaGlobal1').html(respuesta['html']);
+			},
+
+			error: function(respuesta) {
+				console.log(respuesta['responseText']);
+			}
+		});
+	}
 
 
 </script>
