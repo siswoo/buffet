@@ -36,7 +36,7 @@
 			<button class="btn btn-info" style="font-size: 40px;" data-toggle="modal" data-target="#exampleModal1" onclick="otros1();">OTROS</button>
 		</div>
 		<div class="col-12 text-center mt-3">
-			<button class="btn btn-danger" style="font-size: 40px;" onclick="printJS('buffet/ticket.pdf')">Reimprimir</button>
+			<button class="btn btn-danger" style="font-size: 40px;" onclick="printJS('buffet/ticket.pdf')">REIMPRIMIR</button>
 		</div>
 	</div>
 </div>
@@ -46,7 +46,7 @@
 
 <!-- Modal GENERAL -->
 	<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Asignar <span id="modal_titulo1"></span></h5>
@@ -105,12 +105,35 @@
 					</div>
 
 					<div class="row mt-3" id="div_quien1" style="display:none;">
-						<div class="col-12">
+						<div class="col-6">
 							<label for="documento1">Documento de Identidad</label>
 							<input type="search" id="documento1" name="documento1" list="busquedaGlobal1" onkeyup="buscarGlobal1(value);" class="form-control" autocomplete="off" required>
-				    	<datalist id="busquedaGlobal1">
-				    		<option></option>
-				    	</datalist>
+					    	<datalist id="busquedaGlobal1">
+					    		<option></option>
+					    	</datalist>
+						</div>
+						<div class="col-6 form-group form-check">
+							<label>Nombre del Cliente</label>
+							<input type="text" readonly="readonly" id="read_nombre1" name="read_nombre1" class="form-control" value="">
+						</div>
+						<div class="col-12 text-center form-group form-check">
+							<input type="hidden" id="hidden_documento1" name="hidden_documento1" value="">
+							<input type="hidden" id="hidden_quien1" name="hidden_quien1" value="">
+
+							<input type="hidden" id="hidden_cantidad_1" name="hidden_cantidad_1" value="">
+							<input type="hidden" id="hidden_cantidad_2" name="hidden_cantidad_2" value="">
+							<input type="hidden" id="hidden_cantidad_3" name="hidden_cantidad_3" value="">
+							<input type="hidden" id="hidden_cantidad_4" name="hidden_cantidad_4" value="">
+							<input type="hidden" id="hidden_cantidad_5" name="hidden_cantidad_5" value="">
+							<input type="hidden" id="hidden_valor_1" name="hidden_valor_1" value="">
+							<input type="hidden" id="hidden_valor_2" name="hidden_valor_2" value="">
+							<input type="hidden" id="hidden_valor_3" name="hidden_valor_3" value="">
+							<input type="hidden" id="hidden_valor_4" name="hidden_valor_4" value="">
+							<input type="hidden" id="hidden_valor_5" name="hidden_valor_5" value="">
+							
+
+							<button type="button" class="btn btn-primary" onclick="buscar1();">Buscar</button>
+							<button type="button" id="comprar1" class="btn btn-success" style="display:none;" onclick="comprar1();">Comprar</button>
 						</div>
 					</div>
 					<!-- *************** -->
@@ -274,6 +297,19 @@
 							$('#concepto_5').val("");
 							$('#cantidad_5').val("");
 							$('#valor_5').val("");
+							$('#hidden_cantidad_1').val("");
+							$('#hidden_valor_1').val("");
+							$('#hidden_cantidad_2').val("");
+							$('#hidden_valor_2').val("");
+							$('#hidden_cantidad_3').val("");
+							$('#hidden_valor_3').val("");
+							$('#hidden_cantidad_4').val("");
+							$('#hidden_valor_4').val("");
+							$('#hidden_cantidad_5').val("");
+							$('#hidden_valor_5').val("");
+							$('#div_app1').hide("slow");
+							$('#div_quien1').hide("slow");
+
 						}
 					},
 
@@ -366,6 +402,9 @@
 		}else{
 			$('#div_quien1').hide("slow");
 		}
+		$('#documento1').val("");
+		$('#read_nombre1').val("");
+		$('#comprar1').hide("slow");
 	}
 
 	function buscarGlobal1(value){
@@ -374,6 +413,7 @@
 		var quien1 = $('#quien1').val();
 		if(cantidad<=3){
 			$('#busquedaGlobal1').html('ok');
+			$('#read_nombre1').val();
 			return false;
 		}
 		$.ajax({
@@ -387,9 +427,181 @@
 				"condicion": "busquedaGlobal1",
 			},
 
+			beforeSend: function(){
+				$('#read_nombre1').val("");
+				$('#hidden_documento1').val("");
+				$('#hidden_quien1').val("");
+				$('#hidden_cantidad_1').val("");
+				$('#hidden_cantidad_2').val("");
+				$('#hidden_cantidad_3').val("");
+				$('#hidden_cantidad_4').val("");
+				$('#hidden_cantidad_5').val("");
+				$('#hidden_valor_1').val("");
+				$('#hidden_valor_2').val("");
+				$('#hidden_valor_3').val("");
+				$('#hidden_valor_4').val("");
+				$('#hidden_valor_5').val("");
+				$('#comprar1').hide("slow");
+			},
+
 			success: function(respuesta) {
 				console.log(respuesta);
-				$('#busquedaGlobal1').html(respuesta['html']);
+				if(respuesta["contador1"]>=1){
+					$('#busquedaGlobal1').html(respuesta['html']);
+				}
+			},
+
+			error: function(respuesta) {
+				console.log(respuesta['responseText']);
+				$('#read_nombre1').val("");
+				$('#hidden_documento1').val("");
+				$('#hidden_quien1').val("");
+				$('#hidden_cantidad_1').val("");
+				$('#hidden_cantidad_2').val("");
+				$('#hidden_cantidad_3').val("");
+				$('#hidden_cantidad_4').val("");
+				$('#hidden_cantidad_5').val("");
+				$('#hidden_valor_1').val("");
+				$('#hidden_valor_2').val("");
+				$('#hidden_valor_3').val("");
+				$('#hidden_valor_4').val("");
+				$('#hidden_valor_5').val("");
+				$('#comprar1').hide("slow");
+			}
+		});
+	}
+
+	function buscar1(){
+		var documento = $('#documento1').val();
+		var quien = $('#quien1').val();
+		var modal_condicion1 = $('#modal_condicion1').val();
+		/*************VALORES************/
+		var cantidad_1 = $('#cantidad_1').val();
+		var cantidad_2 = $('#cantidad_2').val();
+		var cantidad_3 = $('#cantidad_3').val();
+		var cantidad_4 = $('#cantidad_4').val();
+		var cantidad_5 = $('#cantidad_5').val();
+		var valor_1 = $('#valor_1').val();
+		var valor_2 = $('#valor_2').val();
+		var valor_3 = $('#valor_3').val();
+		var valor_4 = $('#valor_4').val();
+		var valor_5 = $('#valor_5').val();
+		/********************************/
+		$.ajax({
+			type: 'POST',
+			url: 'script/crud_general.php',
+			dataType: "JSON",
+			data: {
+				"documento1": documento,
+				"modal_condicion1": modal_condicion1,
+				"quien": quien,
+				"cantidad_1": cantidad_1,
+				"cantidad_2": cantidad_2,
+				"cantidad_3": cantidad_3,
+				"cantidad_4": cantidad_4,
+				"cantidad_5": cantidad_5,
+				"valor_1": valor_1,
+				"valor_2": valor_2,
+				"valor_3": valor_3,
+				"valor_4": valor_4,
+				"valor_5": valor_5,
+				"condicion": "busquedaGlobal2",
+			},
+
+			beforeSend: function(){
+				$('#respuesta1').html("Buscando...");
+				$('#hidden_documento1').val("");
+				$('#hidden_cantidad_1').val("");
+				$('#hidden_cantidad_2').val("");
+				$('#hidden_cantidad_3').val("");
+				$('#hidden_cantidad_4').val("");
+				$('#hidden_cantidad_5').val("");
+				$('#hidden_valor_1').val("");
+				$('#hidden_valor_2').val("");
+				$('#hidden_valor_3').val("");
+				$('#hidden_valor_4').val("");
+				$('#hidden_valor_5').val("");
+			},
+
+			success: function(respuesta) {
+				console.log(respuesta);
+				if(respuesta["contador1"]>=1){
+					$('#read_nombre1').val(respuesta['nombre']);
+					$('#hidden_documento1').val(documento);
+					$('#hidden_quien1').val(quien);
+					$('#hidden_cantidad_1').val(cantidad_1);
+					$('#hidden_cantidad_2').val(cantidad_2);
+					$('#hidden_cantidad_3').val(cantidad_3);
+					$('#hidden_cantidad_4').val(cantidad_4);
+					$('#hidden_cantidad_5').val(cantidad_5);
+					$('#hidden_valor_1').val(valor_1);
+					$('#hidden_valor_2').val(valor_2);
+					$('#hidden_valor_3').val(valor_3);
+					$('#hidden_valor_4').val(valor_4);
+					$('#hidden_valor_5').val(valor_5);
+					if(respuesta["estatus"]=='ok'){
+						$('#comprar1').show("slow");
+					}else if(respuesta["estatus"]=='Sin Saldo'){
+						$('#hidden_documento1').val("");
+						$('#hidden_quien1').val("");
+						$('#hidden_cantidad_1').val("");
+						$('#hidden_cantidad_2').val("");
+						$('#hidden_cantidad_3').val("");
+						$('#hidden_cantidad_4').val("");
+						$('#hidden_cantidad_5').val("");
+						$('#hidden_valor_1').val("");
+						$('#hidden_valor_2').val("");
+						$('#hidden_valor_3').val("");
+						$('#hidden_valor_4').val("");
+						$('#hidden_valor_5').val("");
+						$('#comprar1').hide("slow");
+						Swal.fire({
+		 					title: 'Error',
+		 					text: "Saldo Insuficiente!",
+		 					icon: 'error',
+		 					position: 'center',
+		 					showConfirmButton: false,
+		 					timer: 3000
+						});
+					}else if(respuesta["estatus"]=='Sin Cuenta'){
+						$('#hidden_documento1').val("");
+						$('#hidden_quien1').val("");
+						$('#hidden_cantidad_1').val("");
+						$('#hidden_cantidad_2').val("");
+						$('#hidden_cantidad_3').val("");
+						$('#hidden_cantidad_4').val("");
+						$('#hidden_cantidad_5').val("");
+						$('#hidden_valor_1').val("");
+						$('#hidden_valor_2').val("");
+						$('#hidden_valor_3').val("");
+						$('#hidden_valor_4').val("");
+						$('#hidden_valor_5').val("");
+						$('#comprar1').hide("slow");
+						Swal.fire({
+		 					title: 'Error',
+		 					text: "No tiene cuenta de Chaturbate o Stripchat!",
+		 					icon: 'error',
+		 					position: 'center',
+		 					showConfirmButton: false,
+		 					timer: 3000
+						});
+					}
+				}else{
+					$('#read_nombre1').val("");
+					$('#hidden_documento1').val("");
+					$('#hidden_quien1').val("");
+					$('#hidden_cantidad_1').val("");
+					$('#hidden_cantidad_2').val("");
+					$('#hidden_cantidad_3').val("");
+					$('#hidden_cantidad_4').val("");
+					$('#hidden_cantidad_5').val("");
+					$('#hidden_valor_1').val("");
+					$('#hidden_valor_2').val("");
+					$('#hidden_valor_3').val("");
+					$('#hidden_valor_4').val("");
+					$('#hidden_valor_5').val("");
+					$('#comprar1').hide("slow");
+				}
 			},
 
 			error: function(respuesta) {
@@ -397,6 +609,169 @@
 			}
 		});
 	}
+
+	function comprar1(){
+		var condicion2 = "App";
+		var documento = $('#hidden_documento1').val();
+		var quien = $('#hidden_quien1').val();
+		var modal_condicion1 = $('#modal_condicion1').val();
+		var concepto1 = $('#concepto_1').val();
+		var cantidad1 = $('#hidden_cantidad_1').val();
+		var valor1 = $('#hidden_valor_1').val();
+
+		var concepto2 = $('#concepto_2').val();
+		var cantidad2 = $('#hidden_cantidad_2').val();
+		var valor2 = $('#hidden_valor_2').val();
+
+		var concepto3 = $('#concepto_3').val();
+		var cantidad3 = $('#hidden_cantidad_3').val();
+		var valor3 = $('#hidden_valor_3').val();
+
+		var concepto4 = $('#concepto_4').val();
+		var cantidad4 = $('#hidden_cantidad_4').val();
+		var valor4 = $('#hidden_valor_4').val();
+
+		var concepto5 = $('#concepto_5').val();
+		var cantidad5 = $('#hidden_cantidad_5').val();
+		var valor5 = $('#hidden_valor_5').val();
+
+		if(concepto1!='' && valor1<500){
+			Swal.fire({
+				title: 'Error en el concepto "'+concepto1+'"',
+				text: "El valor minimo debe ser 500 pesos",
+				icon: 'error',
+				showConfirmButton: true,
+				confirmButtonColor: '#3085d6',
+			});
+			return false;
+		}
+
+		if(concepto2!='' && valor2<500){
+			Swal.fire({
+				title: 'Error en el concepto "'+concepto2+'"',
+				text: "El valor minimo debe ser 500 pesos",
+				icon: 'error',
+				showConfirmButton: true,
+				confirmButtonColor: '#3085d6',
+			});
+			return false;
+		}
+
+		if(concepto3!='' && valor3<500){
+			Swal.fire({
+				title: 'Error en el concepto "'+concepto3+'"',
+				text: "El valor minimo debe ser 500 pesos",
+				icon: 'error',
+				showConfirmButton: true,
+				confirmButtonColor: '#3085d6',
+			});
+			return false;
+		}
+
+
+		if(concepto4!='' && valor4<500){
+			Swal.fire({
+				title: 'Error en el concepto "'+concepto4+'"',
+				text: "El valor minimo debe ser 500 pesos",
+				icon: 'error',
+				showConfirmButton: true,
+				confirmButtonColor: '#3085d6',
+			});
+			return false;
+		}
+
+		if(concepto5!='' && valor5<500){
+			Swal.fire({
+				title: 'Error en el concepto "'+concepto5+'"',
+				text: "El valor minimo debe ser 500 pesos",
+				icon: 'error',
+				showConfirmButton: true,
+				confirmButtonColor: '#3085d6',
+			});
+			return false;
+		}
+
+		Swal.fire({
+			title: 'Estas seguro?',
+			text: "Luego no podrás revertir esta acción",
+			icon: 'warning',
+			showConfirmButton: true,
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Si, Efectuar el registro!',
+			cancelButtonText: 'Cancelar'
+		}).then((result) => {
+			if (result.value) {
+				$.ajax({
+					type: 'POST',
+					url: 'script/crud_general.php',
+					dataType: "JSON",
+					data: {
+						"documento": documento,
+						"quien": quien,
+						"condicion2": condicion2,
+						"modal_condicion1": modal_condicion1,
+						"concepto1": concepto1,
+						"cantidad1": cantidad1,
+						"valor1": valor1,
+						"concepto2": concepto2,
+						"cantidad2": cantidad2,
+						"valor2": valor2,
+						"concepto3": concepto3,
+						"cantidad3": cantidad3,
+						"valor3": valor3,
+						"concepto4": concepto4,
+						"cantidad4": cantidad4,
+						"valor4": valor4,
+						"concepto5": concepto5,
+						"cantidad5": cantidad5,
+						"valor5": valor5,
+						"condicion": "comprar1",
+					},
+					success: function(respuesta) {
+						console.log(respuesta);
+						if(respuesta["estatus"]=='ok'){
+							printJS('buffet/ticket.pdf');
+							$('#concepto_1').val("");
+							$('#cantidad_1').val("");
+							$('#valor_1').val("");
+							$('#concepto_2').val("");
+							$('#cantidad_2').val("");
+							$('#valor_2').val("");
+							$('#concepto_3').val("");
+							$('#cantidad_3').val("");
+							$('#valor_3').val("");
+							$('#concepto_4').val("");
+							$('#cantidad_4').val("");
+							$('#valor_4').val("");
+							$('#concepto_5').val("");
+							$('#cantidad_5').val("");
+							$('#valor_5').val("");
+							$('#hidden_cantidad_1').val("");
+							$('#hidden_valor_1').val("");
+							$('#hidden_cantidad_2').val("");
+							$('#hidden_valor_2').val("");
+							$('#hidden_cantidad_3').val("");
+							$('#hidden_valor_3').val("");
+							$('#hidden_cantidad_4').val("");
+							$('#hidden_valor_4').val("");
+							$('#hidden_cantidad_5').val("");
+							$('#hidden_valor_5').val("");
+							$('#div_app1').hide("slow");
+							$('#div_quien1').hide("slow");
+						}
+
+					},
+
+					error: function(respuesta) {
+						console.log(respuesta["responseText"]);
+					}
+				});
+			}
+		})
+	}
+
 
 
 </script>
