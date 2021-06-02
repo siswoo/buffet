@@ -4,8 +4,8 @@ include("conexion.php");
 include("conexion2.php");
 $fecha_creacion = date("Y-m-d");
 $year = date('Y');
-$mes = date('m')-1;
-$dia = date('d')-1;
+$mes = date('m');
+$dia = date('d');
 $trm = 3400; //Preguntado al jefe y erick el dia 01/06/21
 //$responsable = $_SESSION["id"];
 $condicion = $_POST["condicion"];
