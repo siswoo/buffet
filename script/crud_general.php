@@ -3,9 +3,11 @@
 include("conexion.php");
 include("conexion2.php");
 $fecha_creacion = date("Y-m-d");
+$fecha_mostrar = date("d-m-Y");
+$hora_creacion = date("h:i:s");
 $year = date('Y');
-$mes = date('m');
-$dia = date('d');
+$mes = date('m')-1;
+$dia = date('d')-1;
 $trm = 3400; //Preguntado al jefe y erick el dia 01/06/21
 //$responsable = $_SESSION["id"];
 $condicion = $_POST["condicion"];
@@ -440,6 +442,7 @@ if($condicion=='comprar1'){
 		$proceso1 = mysqli_query($conexion2,$sql1);
 		while($row1 = mysqli_fetch_array($proceso1)) {
 			$id_modelo = $row1["id"];
+			$modelo_nombre = $row1["nombre1"]." ".$row1["apellido1"];
 		}
 		$sql2 = "SELECT * FROM usuarios WHERE usuario = 'Buffet'";
 		$proceso2 = mysqli_query($conexion2,$sql2);
@@ -468,6 +471,13 @@ if($condicion=='comprar1'){
 
 			$pdf->SetFont('Helvetica','',12);
 			$pdf->Cell(25,5,utf8_decode("Buffet Camaleón"),0,1,'C');
+			
+			$pdf->SetFont('Helvetica','',8);
+			$pdf->Ln(5);
+			$pdf->Cell(35,5,utf8_decode("Modelo"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($modelo_nombre),0,1,'');
+			$pdf->Cell(35,5,utf8_decode("Identificación"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($documento1),0,1,'');
 
 			if($modal_condicion1!='Otros'){
 				$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
@@ -526,6 +536,12 @@ if($condicion=='comprar1'){
 			$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
 			$pdf->Cell(25,5,"Total: ". $total_todo,0,1,'');
 
+			$pdf->Ln(5);
+			$pdf->Cell(35,5,utf8_decode("Fecha"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($fecha_mostrar),0,1,'');
+			$pdf->Cell(35,5,utf8_decode("Hora"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($hora_creacion),0,1,'');
+
 			$pdf->Output('F', '../ticket.pdf');
 
 			$datos = [
@@ -539,6 +555,7 @@ if($condicion=='comprar1'){
 		$proceso1 = mysqli_query($conexion2,$sql1);
 		while($row1 = mysqli_fetch_array($proceso1)) {
 			$id_nomina = $row1["id"];
+			$nomina_nombre = $row1["nombre"]." ".$row1["apellido"];
 		}
 		$sql2 = "SELECT * FROM usuarios WHERE usuario = 'Buffet'";
 		$proceso2 = mysqli_query($conexion2,$sql2);
@@ -568,6 +585,13 @@ if($condicion=='comprar1'){
 			$pdf->SetFont('Helvetica','',12);
 			$pdf->Cell(25,5,utf8_decode("Buffet Camaleón"),0,1,'C');
 
+			$pdf->SetFont('Helvetica','',8);
+			$pdf->Ln(5);
+			$pdf->Cell(35,5,utf8_decode("Nomina"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($nomina_nombre),0,1,'');
+			$pdf->Cell(35,5,utf8_decode("Identificación"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($documento1),0,1,'');
+
 			if($modal_condicion1!='Otros'){
 				$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
 				$pdf->Cell(25,5,$modal_condicion1,0,1,'C');
@@ -624,6 +648,12 @@ if($condicion=='comprar1'){
 			$pdf->SetFont('Helvetica','',10);
 			$pdf->Cell(25,5,"-----------------------------------",0,1,'C');
 			$pdf->Cell(25,5,"Total: ". $total_todo,0,1,'');
+
+			$pdf->Ln(5);
+			$pdf->Cell(35,5,utf8_decode("Fecha"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($fecha_mostrar),0,1,'');
+			$pdf->Cell(35,5,utf8_decode("Hora"),0,1,'');
+			$pdf->Cell(50,5,utf8_decode($hora_creacion),0,1,'');
 
 			$pdf->Output('F', '../ticket.pdf');
 

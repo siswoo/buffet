@@ -36,7 +36,7 @@
 			<button class="btn btn-info" style="font-size: 40px;" data-toggle="modal" data-target="#exampleModal1" onclick="otros1();">OTROS</button>
 		</div>
 		<div class="col-12 text-center mt-3">
-			<button class="btn btn-danger" style="font-size: 40px;" onclick="printJS('buffet/ticket.pdf')">REIMPRIMIR</button>
+			<button class="btn btn-danger" style="font-size: 40px;" onclick="printJS('ticket.pdf')">REIMPRIMIR</button>
 		</div>
 	</div>
 </div>
@@ -281,7 +281,7 @@
 					success: function(respuesta) {
 						console.log(respuesta);
 						if(respuesta["estatus"]=='ok'){
-							printJS('buffet/ticket.pdf');
+							printJS('ticket.pdf');
 							$('#concepto_1').val("");
 							$('#cantidad_1').val("");
 							$('#valor_1').val("");
@@ -732,7 +732,7 @@
 					success: function(respuesta) {
 						console.log(respuesta);
 						if(respuesta["estatus"]=='ok'){
-							printJS('buffet/ticket.pdf');
+							printJS('ticket.pdf');
 							$('#concepto_1').val("");
 							$('#cantidad_1').val("");
 							$('#valor_1').val("");
