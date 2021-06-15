@@ -563,7 +563,7 @@
 		 					showConfirmButton: false,
 		 					timer: 3000
 						});
-					}else if(respuesta["estatus"]=='Sin Cuenta'){
+					}else if(respuesta["estatus"]=='Sin cuenta'){
 						$('#hidden_documento1').val("");
 						$('#hidden_quien1').val("");
 						$('#hidden_cantidad_1').val("");
